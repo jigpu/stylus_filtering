@@ -47,40 +47,23 @@ def generate_box():
 
 
 def run_filters(shape, noisy_shape, run_name):
-	run_and_plot_filter(
-		noisy_shape,
-		noisy_shape,
-		shape,
-		run_name,
-		"No Filter"
-	)
-	
-	run_and_plot_filter(
-		noisy_shape,
-		filters.filter_array(filters.mean_filter(4), noisy_shape),
-		shape,
-		run_name,
-		"Reference (Median Filter 4 Samples)"
-	)
-	
+	test_cases = [
+	  ("No Filter", filters.null_filter()),
+	  ("Reference (Median Filter 4 Samples)", filters.mean_filter(4))
+	]
 	for smoothing in [0.5, 0.8]:
 		for prediction in [0.5, 0.8]:
-			run_and_plot_filter(
-				noisy_shape,
-				filters.filter_array(filters.simple_predictive_filter(prediction, smoothing), noisy_shape),
-				shape,
-				run_name,
-				"Predictive Filter (predict={}, smooth={})".format(prediction, smoothing)
+			test_cases.append(
+			  ("Predictive Filter (predict={}, smooth={})".format(prediction, smoothing),
+			   filters.simple_predictive_filter(prediction, smoothing))
 			)
-	
 	for fc in [0.6]:
-		run_and_plot_filter(
-			noisy_shape,
-			filters.filter_array(filters.exp_filter(fc), noisy_shape),
-			shape,
-			run_name,
-			"Exp Filter {}".format(fc)
+		test_cases.append(
+		  ("Exp Filter {}".format(fc), filters.exp_filter(fc))
 		)
+
+	for case in test_cases:
+		run_and_plot_filter(noisy_shape, filters.filter_array(case[1], noisy_shape), shape, run_name, case[0])
 
 
 if __name__ == "__main__":
