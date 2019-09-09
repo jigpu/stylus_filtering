@@ -1,4 +1,5 @@
 from point import Point, add_points, scale_point, invert_point
+from vector import Vector, vector_from_point, vector_to_point, vector_offset_point, vector_as_point, point_as_vector
 
 def null_filter():
 	"""Filter which returns points as-is"""
@@ -83,6 +84,23 @@ def simple_predictive_filter(prediction_factor, velocity_smoothing_factor):
 		return smoothed_predicted_point
 		
 	return process 
+
+
+def vector_filter(fltr):
+	""" Runs a filter on the directional vectors instead of raw points """
+	prev = None
+
+	def process(new_data):
+		nonlocal prev
+		if prev is not None:
+			fake_pt = fltr(vector_as_point(vector_from_point(prev, new_data)))
+			fltr_pt = vector_offset_point(prev, point_as_vector(fake_pt))
+		else:
+			fltr_pt = new_data
+		prev = fltr_pt
+		return fltr_pt
+
+	return process
 
 
 def filter_array(fltr, points):

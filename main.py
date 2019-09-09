@@ -62,6 +62,15 @@ def run_filters(shape, noisy_shape, run_name):
 		  ("Exp Filter {}".format(fc), filters.exp_filter(fc))
 		)
 
+	#for case in [*test_cases]:
+	#	test_cases.append(("{} (Vector)".format(case[0]), filters.vector_filter(case[1])))
+	test_cases.append(("Exp Vector 0.1", filters.vector_filter(filters.exp_filter(0.1))))
+	test_cases.append(("Exp Vector 0.2", filters.vector_filter(filters.exp_filter(0.2))))
+	test_cases.append(("Exp Vector 0.3", filters.vector_filter(filters.exp_filter(0.3))))
+	test_cases.append(("Exp Vector 0.4", filters.vector_filter(filters.exp_filter(0.4))))
+	test_cases.append(("Exp Vector 0.5", filters.vector_filter(filters.exp_filter(0.5))))
+	test_cases.append(("Exp Vector 0.6", filters.vector_filter(filters.exp_filter(0.6))))
+
 	for case in test_cases:
 		run_and_plot_filter(noisy_shape, filters.filter_array(case[1], noisy_shape), shape, run_name, case[0])
 
